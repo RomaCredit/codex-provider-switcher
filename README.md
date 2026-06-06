@@ -20,31 +20,7 @@ When the official subscription limit resets, you can switch back to the official
 
 ## Language
 
-English is the default language.
-
-Use Chinese output with the cross-platform Python CLI:
-
-```bash
-python3 codex_provider_switcher.py status --lang zh
-```
-
-On Windows PowerShell, the same option is:
-
-```powershell
-.\switch-codex-provider.ps1 status -Lang zh
-```
-
-Use the Chinese menu on Windows:
-
-```bat
-codex-provider-menu.zh-CN.bat
-```
-
-Use the Chinese menu on macOS:
-
-```bash
-./codex-provider-menu.zh-CN.command
-```
+Runtime output is English-only to avoid Windows console and PowerShell encoding issues. Chinese documentation is available in [README.zh-CN.md](README.zh-CN.md).
 
 ## Features
 
@@ -56,7 +32,6 @@ Use the Chinese menu on macOS:
 - Synchronize `model_provider` in both `state_5.sqlite` and `sessions/rollout-*.jsonl`.
 - Normalize old `\\?\` working-directory path prefixes.
 - Create backups before modifying Codex Desktop state.
-- Support English and Chinese CLI/menu output, with English as default.
 - Support Windows through PowerShell and macOS through the Python CLI.
 
 ## Requirements
@@ -290,7 +265,6 @@ On macOS, Codex Desktop should be fully quit before switching. If the `.command`
 
 ```bash
 chmod +x ./codex-provider-menu.command
-chmod +x ./codex-provider-menu.zh-CN.command
 ```
 
 ## Limitations
@@ -308,20 +282,16 @@ Core files:
 - `codex_provider_switcher.py`
 - `switch-codex-provider.ps1`
 - `codex-provider-menu.bat`
-- `codex-provider-menu.zh-CN.bat`
 - `codex-provider-menu.command`
-- `codex-provider-menu.zh-CN.command`
 
 Basic checks:
 
 ```powershell
 .\switch-codex-provider.ps1 status
-.\switch-codex-provider.ps1 status -Lang zh
 ```
 
 ```bash
 python3 codex_provider_switcher.py status
-python3 codex_provider_switcher.py status --lang zh
 ```
 
 ## License

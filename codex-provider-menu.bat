@@ -16,27 +16,27 @@ echo.
 set /p choice=Choose: 
 
 if "%choice%"=="1" (
-  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch-codex-provider.ps1" apimaster -Lang en
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch-codex-provider.ps1" apimaster
   goto menu
 )
 if "%choice%"=="2" (
-  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch-codex-provider.ps1" official -Lang en
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch-codex-provider.ps1" official
   goto menu
 )
 if "%choice%"=="3" (
-  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch-codex-provider.ps1" status -Lang en
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch-codex-provider.ps1" status
   goto menu
 )
 if "%choice%"=="4" (
-  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch-codex-provider.ps1" test -Lang en
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch-codex-provider.ps1" test
   goto menu
 )
 if "%choice%"=="5" (
-  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch-codex-provider.ps1" save-official -Lang en
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch-codex-provider.ps1" save-official
   goto menu
 )
 if "%choice%"=="6" (
-  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch-codex-provider.ps1" repair-history -Lang en
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch-codex-provider.ps1" repair-history
   goto menu
 )
 if "%choice%"=="0" exit /b 0

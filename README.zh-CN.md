@@ -20,31 +20,7 @@ Codex Desktop 官方订阅可能会遇到 5 小时滚动限额。限额到了以
 
 ## 语言
 
-默认语言是英文。
-
-跨平台 Python CLI 使用中文输出：
-
-```bash
-python3 codex_provider_switcher.py status --lang zh
-```
-
-Windows PowerShell 使用中文输出：
-
-```powershell
-.\switch-codex-provider.ps1 status -Lang zh
-```
-
-Windows 中文菜单：
-
-```bat
-codex-provider-menu.zh-CN.bat
-```
-
-macOS 中文菜单：
-
-```bash
-./codex-provider-menu.zh-CN.command
-```
+程序运行输出仅支持英文。这样可以避免 Windows 控制台、PowerShell 和系统代码页差异导致的编码错误。中文内容仅保留在文档中。
 
 ## 功能
 
@@ -56,7 +32,6 @@ macOS 中文菜单：
 - 同步 `state_5.sqlite` 和 `sessions/rollout-*.jsonl` 中的 `model_provider`
 - 修复旧版本留下的 `\\?\` 工作目录路径前缀
 - 修改 Codex Desktop 状态前自动备份
-- 支持英文和中文 CLI/菜单输出，默认英文
 - Windows 通过 PowerShell 支持，macOS 通过 Python CLI 支持
 
 ## 适用环境
@@ -242,7 +217,6 @@ macOS 上请在切换前完全退出 Codex Desktop。
 
 ```bash
 chmod +x ./codex-provider-menu.command
-chmod +x ./codex-provider-menu.zh-CN.command
 ```
 
 ## 回滚
@@ -274,20 +248,16 @@ chmod +x ./codex-provider-menu.zh-CN.command
 - `codex_provider_switcher.py`
 - `switch-codex-provider.ps1`
 - `codex-provider-menu.bat`
-- `codex-provider-menu.zh-CN.bat`
 - `codex-provider-menu.command`
-- `codex-provider-menu.zh-CN.command`
 
 基本检查：
 
 ```bash
 python3 codex_provider_switcher.py status
-python3 codex_provider_switcher.py status --lang zh
 ```
 
 ```powershell
 .\switch-codex-provider.ps1 status
-.\switch-codex-provider.ps1 status -Lang zh
 ```
 
 ## 许可证

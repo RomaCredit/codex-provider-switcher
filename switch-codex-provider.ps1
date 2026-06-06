@@ -7,8 +7,6 @@
     [string] $Model = "gpt-5.5",
     [string] $BaseUrl = "https://apimaster.ai/v1",
     [string] $CodexHome = (Join-Path $env:USERPROFILE ".codex"),
-    [ValidateSet("en", "zh")]
-    [string] $Lang = "en",
     [switch] $ChatFallback
 )
 
@@ -24,42 +22,36 @@ $OfficialConfigPath = Join-Path $StateDir "official.config.toml"
 $OfficialAuthPath = Join-Path $StateDir "official.auth.json"
 $ApimasterAuthPath = Join-Path $StateDir "apimaster.auth.json"
 
-$MessagesJson = @"
-{
-  "stateDbMissing": {"en": "Codex state DB not found: {0}", "zh": "\u672a\u627e\u5230 Codex \u72b6\u6001\u6570\u636e\u5e93\uff1a{0}"},
-  "pythonMissingState": {"en": "Python was not found, so state DB repair was skipped.", "zh": "\u672a\u627e\u5230 Python\uff0c\u5df2\u8df3\u8fc7\u72b6\u6001\u6570\u636e\u5e93\u4fee\u590d\u3002"},
-  "sessionsMissing": {"en": "Codex sessions directory not found: {0}", "zh": "\u672a\u627e\u5230 Codex \u4f1a\u8bdd\u76ee\u5f55\uff1a{0}"},
-  "pythonMissingSessions": {"en": "Python was not found, so session metadata repair was skipped.", "zh": "\u672a\u627e\u5230 Python\uff0c\u5df2\u8df3\u8fc7\u4f1a\u8bdd\u5143\u6570\u636e\u4fee\u590d\u3002"},
-  "globalStateMissing": {"en": "Codex Desktop global state not found: {0}", "zh": "\u672a\u627e\u5230 Codex Desktop \u5168\u5c40\u72b6\u6001\u6587\u4ef6\uff1a{0}"},
-  "historyHintsRepaired": {"en": "Repaired Codex Desktop history hints: sessions={0}, added={1}, updated={2}, parse_errors={3}", "zh": "\u5df2\u4fee\u590d Codex Desktop \u5386\u53f2\u63d0\u793a\uff1a\u4f1a\u8bdd\u6570={0}\uff0c\u65b0\u589e={1}\uff0c\u66f4\u65b0={2}\uff0c\u89e3\u6790\u9519\u8bef={3}"},
-  "restartCodex": {"en": "Restart Codex Desktop if the sidebar still shows stale project chat lists.", "zh": "\u5982\u679c\u4fa7\u8fb9\u680f\u9879\u76ee\u5bf9\u8bdd\u5217\u8868\u4ecd\u7136\u8fc7\u65e7\uff0c\u8bf7\u91cd\u542f Codex Desktop\u3002"},
-  "pasteKey": {"en": "Paste APIMaster API key", "zh": "\u8bf7\u8f93\u5165 APIMaster API key"},
-  "keyRequired": {"en": "APIMaster API key is required.", "zh": "\u5fc5\u987b\u63d0\u4f9b APIMaster API key\u3002"},
-  "switchedApimaster": {"en": "Switched Codex to APIMaster: model={0}, base_url={1}", "zh": "\u5df2\u5c06 Codex \u5207\u6362\u5230 APIMaster\uff1a\u6a21\u578b={0}\uff0cbase_url={1}"},
-  "historyUntouched": {"en": "Conversation history is untouched. Restart Codex Desktop or open a new turn if the app has cached provider settings.", "zh": "\u5bf9\u8bdd\u5185\u5bb9\u672a\u88ab\u5220\u9664\u6216\u6539\u5199\u3002\u5982\u679c\u5e94\u7528\u7f13\u5b58\u4e86 provider \u8bbe\u7f6e\uff0c\u8bf7\u91cd\u542f Codex Desktop \u6216\u6253\u5f00\u4e00\u4e2a\u65b0\u56de\u5408\u3002"},
-  "officialAuthMissing": {"en": "No saved official auth profile found. Use Codex login if the official subscription is not active.", "zh": "\u672a\u627e\u5230\u5df2\u4fdd\u5b58\u7684\u5b98\u65b9\u8ba4\u8bc1\u914d\u7f6e\u3002\u5982\u679c\u5b98\u65b9\u8ba2\u9605\u672a\u751f\u6548\uff0c\u8bf7\u5728 Codex \u4e2d\u91cd\u65b0\u767b\u5f55\u3002"},
-  "switchedOfficial": {"en": "Switched Codex to official subscription profile.", "zh": "\u5df2\u5c06 Codex \u5207\u6362\u5230\u5b98\u65b9\u8ba2\u9605\u914d\u7f6e\u3002"},
-  "providerStatus": {"en": "Codex provider: {0}", "zh": "Codex provider\uff1a{0}"},
-  "modelStatus": {"en": "Model: {0}", "zh": "\u6a21\u578b\uff1a{0}"},
-  "authStatus": {"en": "Auth mode: {0}", "zh": "\u8ba4\u8bc1\u6a21\u5f0f\uff1a{0}"},
-  "backupStatus": {"en": "Switcher backups: {0}", "zh": "\u5207\u6362\u5668\u5907\u4efd\u76ee\u5f55\uff1a{0}"},
-  "noApimasterKey": {"en": "No APIMaster API key found. Run: .\\switch-codex-provider.ps1 apimaster -ApiKey YOUR_KEY", "zh": "\u672a\u627e\u5230 APIMaster API key\u3002\u8bf7\u8fd0\u884c\uff1a.\\switch-codex-provider.ps1 apimaster -ApiKey YOUR_KEY"},
-  "modelsOk": {"en": "APIMaster /models OK. First models:", "zh": "APIMaster /models \u8bf7\u6c42\u6210\u529f\u3002\u524d\u51e0\u4e2a\u6a21\u578b\uff1a"},
-  "savedOfficial": {"en": "Saved current Codex config/auth as official profile.", "zh": "\u5df2\u5c06\u5f53\u524d Codex \u914d\u7f6e\u548c\u8ba4\u8bc1\u4fdd\u5b58\u4e3a\u5b98\u65b9\u914d\u7f6e\u3002"}
+$Messages = @{
+    stateDbMissing = "Codex state DB not found: {0}"
+    pythonMissingState = "Python was not found, so state DB repair was skipped."
+    sessionsMissing = "Codex sessions directory not found: {0}"
+    pythonMissingSessions = "Python was not found, so session metadata repair was skipped."
+    globalStateMissing = "Codex Desktop global state not found: {0}"
+    historyHintsRepaired = "Repaired Codex Desktop history hints: sessions={0}, added={1}, updated={2}, parse_errors={3}"
+    restartCodex = "Restart Codex Desktop if the sidebar still shows stale project chat lists."
+    pasteKey = "Paste APIMaster API key"
+    keyRequired = "APIMaster API key is required."
+    switchedApimaster = "Switched Codex to APIMaster: model={0}, base_url={1}"
+    historyUntouched = "Conversation history is untouched. Restart Codex Desktop or open a new turn if the app has cached provider settings."
+    officialAuthMissing = "No saved official auth profile found. Use Codex login if the official subscription is not active."
+    switchedOfficial = "Switched Codex to official subscription profile."
+    providerStatus = "Codex provider: {0}"
+    modelStatus = "Model: {0}"
+    authStatus = "Auth mode: {0}"
+    backupStatus = "Switcher backups: {0}"
+    noApimasterKey = "No APIMaster API key found. Run: .\switch-codex-provider.ps1 apimaster -ApiKey YOUR_KEY"
+    modelsOk = "APIMaster /models OK. First models:"
+    savedOfficial = "Saved current Codex config/auth as official profile."
 }
-"@
-$Messages = $MessagesJson | ConvertFrom-Json
+
 function T {
     param(
         [Parameter(Mandatory = $true)] [string] $Key,
         [object[]] $Args = @()
     )
-    $entryProp = $Messages.PSObject.Properties[$Key]
-    if (!$entryProp) { return $Key }
-    $entry = $entryProp.Value
-    $templateProp = $entry.PSObject.Properties[$Lang]
-    if (!$templateProp) { $templateProp = $entry.PSObject.Properties["en"] }
-    $template = $templateProp.Value
+    $template = $Messages[$Key]
+    if (!$template) { return $Key }
     if ($Args.Count -gt 0) { return [string]::Format($template, $Args) }
     return $template
 }
@@ -458,6 +450,7 @@ function Show-Status {
     $config = if (Test-Path $ConfigPath) { Get-Content -Raw -LiteralPath $ConfigPath } else { "" }
     $provider = Get-TopLevelValue -Text $config -Key "model_provider"
     $modelName = Get-TopLevelValue -Text $config -Key "model"
+    if (!$modelName) { $modelName = "" }
     $authMode = "missing"
     if (Test-Path $AuthPath) {
         $auth = Get-Content -Raw -LiteralPath $AuthPath | ConvertFrom-Json

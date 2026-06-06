@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Cross-platform Codex Desktop provider switcher.
 
 This CLI supports macOS and Windows. The Windows PowerShell script remains
@@ -24,82 +24,29 @@ DEFAULT_BASE_URL = "https://apimaster.ai/v1"
 DEFAULT_MODEL = "gpt-5.5"
 
 MESSAGES = {
-    "state_db_missing": {
-        "en": "Codex state DB not found: {0}",
-        "zh": "未找到 Codex 状态数据库：{0}",
-    },
-    "sessions_missing": {
-        "en": "Codex sessions directory not found: {0}",
-        "zh": "未找到 Codex 会话目录：{0}",
-    },
-    "global_state_missing": {
-        "en": "Codex Desktop global state not found: {0}",
-        "zh": "未找到 Codex Desktop 全局状态文件：{0}",
-    },
-    "history_hints_repaired": {
-        "en": "Repaired Codex Desktop history hints: sessions={0}, added={1}, updated={2}, parse_errors={3}",
-        "zh": "已修复 Codex Desktop 历史提示：会话数={0}，新增={1}，更新={2}，解析错误={3}",
-    },
-    "session_meta_repaired": {
-        "en": "Repaired Codex session metadata: checked={0}, changed={1}, provider={2}, parse_errors={3}, backup_dir={4}",
-        "zh": "已修复 Codex 会话元数据：checked={0}，changed={1}，provider={2}，parse_errors={3}，backup_dir={4}",
-    },
-    "state_db_repaired": {
-        "en": "Repaired Codex state DB: cwd_checked={0}, cwd_updated={1}, provider={2}, provider_updated={3}, backup={4}",
-        "zh": "已修复 Codex 状态数据库：cwd_checked={0}，cwd_updated={1}，provider={2}，provider_updated={3}，backup={4}",
-    },
-    "restart": {
-        "en": "Restart Codex Desktop if the sidebar still shows stale project chat lists.",
-        "zh": "如果侧边栏项目对话列表仍然过旧，请重启 Codex Desktop。",
-    },
-    "paste_key": {
-        "en": "Paste APIMaster API key: ",
-        "zh": "请输入 APIMaster API key：",
-    },
-    "key_required": {
-        "en": "APIMaster API key is required.",
-        "zh": "必须提供 APIMaster API key。",
-    },
-    "switched_apimaster": {
-        "en": "Switched Codex to APIMaster: model={0}, base_url={1}",
-        "zh": "已将 Codex 切换到 APIMaster：模型={0}，base_url={1}",
-    },
-    "history_untouched": {
-        "en": "Conversation history is untouched. Restart Codex Desktop or open a new turn if the app has cached provider settings.",
-        "zh": "对话内容未被删除或改写。如果应用缓存了 provider 设置，请重启 Codex Desktop 或打开一个新回合。",
-    },
-    "official_auth_missing": {
-        "en": "No saved official auth profile found. Use Codex login if the official subscription is not active.",
-        "zh": "未找到已保存的官方认证配置。如果官方订阅未生效，请在 Codex 中重新登录。",
-    },
-    "switched_official": {
-        "en": "Switched Codex to official subscription profile.",
-        "zh": "已将 Codex 切换到官方订阅配置。",
-    },
-    "provider_status": {"en": "Codex provider: {0}", "zh": "Codex provider：{0}"},
-    "model_status": {"en": "Model: {0}", "zh": "模型：{0}"},
-    "auth_status": {"en": "Auth mode: {0}", "zh": "认证模式：{0}"},
-    "backup_status": {
-        "en": "Switcher backups: {0}",
-        "zh": "切换器备份目录：{0}",
-    },
-    "no_apimaster_key": {
-        "en": "No APIMaster API key found. Run: python3 codex_provider_switcher.py apimaster --api-key YOUR_KEY",
-        "zh": "未找到 APIMaster API key。请运行：python3 codex_provider_switcher.py apimaster --api-key YOUR_KEY",
-    },
-    "models_ok": {
-        "en": "APIMaster /models OK. First models:",
-        "zh": "APIMaster /models 请求成功。前几个模型：",
-    },
-    "saved_official": {
-        "en": "Saved current Codex config/auth as official profile.",
-        "zh": "已将当前 Codex 配置和认证保存为官方配置。",
-    },
+    "state_db_missing": "Codex state DB not found: {0}",
+    "sessions_missing": "Codex sessions directory not found: {0}",
+    "global_state_missing": "Codex Desktop global state not found: {0}",
+    "history_hints_repaired": "Repaired Codex Desktop history hints: sessions={0}, added={1}, updated={2}, parse_errors={3}",
+    "session_meta_repaired": "Repaired Codex session metadata: checked={0}, changed={1}, provider={2}, parse_errors={3}, backup_dir={4}",
+    "state_db_repaired": "Repaired Codex state DB: cwd_checked={0}, cwd_updated={1}, provider={2}, provider_updated={3}, backup={4}",
+    "restart": "Restart Codex Desktop if the sidebar still shows stale project chat lists.",
+    "paste_key": "Paste APIMaster API key: ",
+    "key_required": "APIMaster API key is required.",
+    "switched_apimaster": "Switched Codex to APIMaster: model={0}, base_url={1}",
+    "history_untouched": "Conversation history is untouched. Restart Codex Desktop or open a new turn if the app has cached provider settings.",
+    "official_auth_missing": "No saved official auth profile found. Use Codex login if the official subscription is not active.",
+    "switched_official": "Switched Codex to official subscription profile.",
+    "provider_status": "Codex provider: {0}",
+    "model_status": "Model: {0}",
+    "auth_status": "Auth mode: {0}",
+    "backup_status": "Switcher backups: {0}",
+    "no_apimaster_key": "No APIMaster API key found. Run: python3 codex_provider_switcher.py apimaster --api-key YOUR_KEY",
+    "models_ok": "APIMaster /models OK. First models:",
+    "saved_official": "Saved current Codex config/auth as official profile.",
 }
-
-
-def tr(lang: str, key: str, *args: Any) -> str:
-    template = MESSAGES.get(key, {}).get(lang) or MESSAGES.get(key, {}).get("en") or key
+def tr(key: str, *args: Any) -> str:
+    template = MESSAGES.get(key) or key
     return template.format(*args)
 
 
@@ -108,9 +55,8 @@ def timestamp() -> str:
 
 
 class Switcher:
-    def __init__(self, codex_home: Path, lang: str) -> None:
+    def __init__(self, codex_home: Path) -> None:
         self.codex_home = codex_home.expanduser()
-        self.lang = lang
         self.config_path = self.codex_home / "config.toml"
         self.auth_path = self.codex_home / "auth.json"
         self.global_state_path = self.codex_home / ".codex-global-state.json"
@@ -122,10 +68,10 @@ class Switcher:
         self.apimaster_auth_path = self.state_dir / "apimaster.auth.json"
 
     def say(self, key: str, *args: Any) -> None:
-        print(tr(self.lang, key, *args))
+        print(tr(key, *args))
 
     def warn(self, key: str, *args: Any) -> None:
-        print("WARNING: " + tr(self.lang, key, *args), file=sys.stderr)
+        print("WARNING: " + tr(key, *args), file=sys.stderr)
 
     def ensure_state_dir(self) -> None:
         self.state_dir.mkdir(parents=True, exist_ok=True)
@@ -379,9 +325,9 @@ class Switcher:
             saved = json.loads(self.apimaster_auth_path.read_text(encoding="utf-8"))
             api_key = saved.get("OPENAI_API_KEY")
         if not api_key:
-            api_key = getpass.getpass(tr(self.lang, "paste_key"))
+            api_key = getpass.getpass(tr("paste_key"))
         if not api_key:
-            raise SystemExit(tr(self.lang, "key_required"))
+            raise SystemExit(tr("key_required"))
 
         auth_json = json.dumps({"OPENAI_API_KEY": api_key}, indent=2)
         self.auth_path.write_text(auth_json, encoding="utf-8")
@@ -441,7 +387,7 @@ class Switcher:
             saved = json.loads(self.auth_path.read_text(encoding="utf-8"))
             api_key = saved.get("OPENAI_API_KEY")
         if not api_key:
-            raise SystemExit(tr(self.lang, "no_apimaster_key"))
+            raise SystemExit(tr("no_apimaster_key"))
         req = urllib.request.Request(
             base_url.rstrip("/") + "/models",
             headers={"Authorization": f"Bearer {api_key}"},
@@ -467,14 +413,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--base-url", default=DEFAULT_BASE_URL)
     parser.add_argument("--codex-home", default=os.path.expanduser("~/.codex"))
-    parser.add_argument("--lang", choices=["en", "zh"], default="en")
     parser.add_argument("--chat-fallback", action="store_true")
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    switcher = Switcher(Path(args.codex_home), args.lang)
+    switcher = Switcher(Path(args.codex_home))
     switcher.ensure_state_dir()
     if args.mode == "apimaster":
         switcher.switch_to_apimaster(
