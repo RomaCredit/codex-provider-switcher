@@ -12,6 +12,12 @@ https://apimaster.ai/v1
 
 它还会同步 Codex Desktop 的历史会话元数据，避免切换 provider 后项目侧边栏看不到旧对话。
 
+## 为什么需要它
+
+Codex Desktop 官方订阅可能会遇到 5 小时滚动限额。限额到了以后，你可以用这个工具切换到 APIMaster.ai 的三方 API key，并且继续在原来的项目对话里工作。
+
+等官方订阅限额恢复后，你可以再切回 Codex 官方订阅模式。工具会双向同步历史会话元数据，让同一批项目对话在 APIMaster 和官方订阅之间无缝切换。
+
 ## 语言
 
 默认语言是英文。
@@ -44,6 +50,7 @@ macOS 中文菜单：
 
 - 切换到 APIMaster API key 模式
 - 切回官方 ChatGPT 订阅配置
+- 在两种模式之间保持项目历史对话可见
 - 保存并复用官方配置和 APIMaster 认证
 - 修复 Codex Desktop 项目侧边栏历史会话
 - 同步 `state_5.sqlite` 和 `sessions/rollout-*.jsonl` 中的 `model_provider`

@@ -12,6 +12,12 @@ https://apimaster.ai/v1
 
 The tool also synchronizes Codex Desktop conversation history metadata, so project sidebar conversations remain visible after switching provider modes.
 
+## Why This Exists
+
+Codex Desktop official subscription usage can hit its rolling usage limit. When that happens, this tool lets you switch to an APIMaster.ai third-party API key and keep working in the same project conversations.
+
+When the official subscription limit resets, you can switch back to the official Codex subscription profile. Conversation history metadata is synchronized in both directions, so the same project threads remain visible and usable across provider modes.
+
 ## Language
 
 English is the default language.
@@ -44,6 +50,7 @@ Use the Chinese menu on macOS:
 
 - Switch to APIMaster API-key mode.
 - Switch back to the official ChatGPT subscription profile.
+- Keep project conversation history available across both modes.
 - Save and reuse official and APIMaster auth profiles.
 - Repair Codex Desktop project sidebar conversation history.
 - Synchronize `model_provider` in both `state_5.sqlite` and `sessions/rollout-*.jsonl`.
