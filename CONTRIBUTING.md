@@ -8,7 +8,7 @@ This project is intentionally small and has no build step.
 
 Requirements:
 
-- Windows
+- Windows or macOS
 - PowerShell
 - Python 3
 - Codex Desktop, for real-world testing
@@ -16,6 +16,12 @@ Requirements:
 ## Before Opening a Pull Request
 
 Please run:
+
+```bash
+python3 codex_provider_switcher.py status
+```
+
+On Windows, also run:
 
 ```powershell
 .\switch-codex-provider.ps1 status
@@ -36,4 +42,3 @@ Use `-CodexHome` with a temporary fixture directory when possible, so tests do n
 - Keep all state mutations backed up before writing.
 - Avoid logging API keys or sensitive auth content.
 - Document any new Codex Desktop state file that the tool reads or writes.
-

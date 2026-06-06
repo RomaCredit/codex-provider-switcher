@@ -2,7 +2,7 @@
 
 [English](README.md)
 
-Codex Provider Switcher 是一个 Windows 上的小工具，用于在 Codex Desktop 的官方 ChatGPT 订阅模式和 OpenAI 兼容第三方 API provider 之间一键切换。
+Codex Provider Switcher 是一个支持 Windows 和 macOS 的小工具，用于在 Codex Desktop 的官方 ChatGPT 订阅模式和 OpenAI 兼容第三方 API provider 之间一键切换。
 
 当前默认第三方 provider 为 APIMaster：
 
@@ -16,16 +16,28 @@ https://apimaster.ai/v1
 
 默认语言是英文。
 
-使用中文输出：
+跨平台 Python CLI 使用中文输出：
+
+```bash
+python3 codex_provider_switcher.py status --lang zh
+```
+
+Windows PowerShell 使用中文输出：
 
 ```powershell
 .\switch-codex-provider.ps1 status -Lang zh
 ```
 
-使用中文菜单：
+Windows 中文菜单：
 
 ```bat
 codex-provider-menu.zh-CN.bat
+```
+
+macOS 中文菜单：
+
+```bash
+./codex-provider-menu.zh-CN.command
 ```
 
 ## 功能
@@ -38,28 +50,32 @@ codex-provider-menu.zh-CN.bat
 - 修复旧版本留下的 `\\?\` 工作目录路径前缀
 - 修改 Codex Desktop 状态前自动备份
 - 支持英文和中文 CLI/菜单输出，默认英文
+- Windows 通过 PowerShell 支持，macOS 通过 Python CLI 支持
 
 ## 适用环境
 
-- Windows
+- Windows 或 macOS
 - Codex Desktop
-- PowerShell
-- Python 3，可通过 `python` 在 `PATH` 中调用
+- Python 3
+- PowerShell，仅 Windows `.ps1` 和 `.bat` 入口需要
 
 Python 用于安全修改 Codex Desktop 的 SQLite 状态库和 JSONL 会话元数据。
 
 ## 快速开始
 
-先完全退出 Codex Desktop，然后双击：
+请先完全退出 Codex Desktop。
+
+Windows 双击：
 
 ```bat
 codex-provider-menu.bat
 ```
 
-中文用户也可以双击：
+macOS 运行：
 
-```bat
-codex-provider-menu.zh-CN.bat
+```bash
+chmod +x ./codex-provider-menu.command
+./codex-provider-menu.command
 ```
 
 英文菜单选项：
@@ -83,6 +99,49 @@ codex-provider-menu.zh-CN.bat
 5. 重新打开 Codex Desktop
 
 ## 命令行用法
+
+### 跨平台 Python CLI
+
+查看当前状态：
+
+```bash
+python3 codex_provider_switcher.py status
+```
+
+切换到 APIMaster：
+
+```bash
+python3 codex_provider_switcher.py apimaster
+```
+
+显式传入 key、模型和 base URL：
+
+```bash
+python3 codex_provider_switcher.py apimaster \
+  --api-key "YOUR_APIMASTER_KEY" \
+  --model "gpt-5.5" \
+  --base-url "https://apimaster.ai/v1"
+```
+
+切回官方 ChatGPT 订阅配置：
+
+```bash
+python3 codex_provider_switcher.py official
+```
+
+只修复历史，不切换 provider：
+
+```bash
+python3 codex_provider_switcher.py repair-history
+```
+
+使用非默认 Codex home 目录做测试：
+
+```bash
+python3 codex_provider_switcher.py status --codex-home "/tmp/fake-codex-home"
+```
+
+### Windows PowerShell CLI
 
 查看当前状态：
 
@@ -111,33 +170,9 @@ codex-provider-menu.zh-CN.bat
 .\switch-codex-provider.ps1 official
 ```
 
-只修复历史，不切换 provider：
-
-```powershell
-.\switch-codex-provider.ps1 repair-history
-```
-
-测试 APIMaster `/models`：
-
-```powershell
-.\switch-codex-provider.ps1 test
-```
-
-保存当前 Codex 配置和认证为官方配置：
-
-```powershell
-.\switch-codex-provider.ps1 save-official
-```
-
-使用非默认 Codex home 目录做测试：
-
-```powershell
-.\switch-codex-provider.ps1 status -CodexHome "D:\tmp\fake-codex-home"
-```
-
 ## 它会修改什么
 
-默认读写：
+Windows 默认读写：
 
 - `%USERPROFILE%\.codex\config.toml`
 - `%USERPROFILE%\.codex\auth.json`
@@ -145,14 +180,28 @@ codex-provider-menu.zh-CN.bat
 - `%USERPROFILE%\.codex\state_5.sqlite`
 - `%USERPROFILE%\.codex\sessions\...\rollout-*.jsonl`
 
+macOS 默认读写：
+
+- `~/.codex/config.toml`
+- `~/.codex/auth.json`
+- `~/.codex/.codex-global-state.json`
+- `~/.codex/state_5.sqlite`
+- `~/.codex/sessions/.../rollout-*.jsonl`
+
 它不会删除对话内容。历史修复只更新 Codex Desktop 用来关联项目和 provider 的元数据。
 
 ## 备份
 
-备份写入：
+Windows 备份目录：
 
 ```text
 %USERPROFILE%\.codex\provider-switcher
+```
+
+macOS 备份目录：
+
+```text
+~/.codex/provider-switcher
 ```
 
 常见备份文件：
@@ -161,7 +210,7 @@ codex-provider-menu.zh-CN.bat
 - `auth.<timestamp>.json.bak`
 - `global-state.<timestamp>.json.bak`
 - `state_5.<timestamp>.sqlite.bak`
-- `session-meta.<timestamp>.bak\...`
+- `session-meta.<timestamp>.bak/...`
 
 ## 为什么需要同步历史
 
@@ -178,13 +227,20 @@ Codex Desktop 的项目侧边栏历史不只依赖会话文件本身，还可能
 - APIMaster 模式：`apimaster`
 - 官方订阅模式：`openai`
 
+## macOS 注意事项
+
+macOS 上请在切换前完全退出 Codex Desktop。
+
+如果 `.command` 文件下载后无法执行，请运行：
+
+```bash
+chmod +x ./codex-provider-menu.command
+chmod +x ./codex-provider-menu.zh-CN.command
+```
+
 ## 回滚
 
-如需回滚，请完全退出 Codex Desktop，然后从以下目录手动恢复对应时间戳的备份：
-
-```text
-%USERPROFILE%\.codex\provider-switcher
-```
+如需回滚，请完全退出 Codex Desktop，然后从 `provider-switcher` 备份目录手动恢复对应时间戳的备份。
 
 ## 安全说明
 
@@ -198,7 +254,7 @@ Codex Desktop 的项目侧边栏历史不只依赖会话文件本身，还可能
 
 ## 限制
 
-- 仅支持 Windows 和 Codex Desktop
+- 仅支持 Codex Desktop
 - Codex Desktop 内部状态结构可能随版本变化。如果未来升级后历史异常，请先运行 `repair-history`
 - 官方订阅配置需要先在 Codex Desktop 中登录成功，然后运行 `save-official` 或至少从官方模式切换到 APIMaster 一次
 
@@ -208,11 +264,19 @@ Codex Desktop 的项目侧边栏历史不只依赖会话文件本身，还可能
 
 核心文件：
 
+- `codex_provider_switcher.py`
 - `switch-codex-provider.ps1`
 - `codex-provider-menu.bat`
 - `codex-provider-menu.zh-CN.bat`
+- `codex-provider-menu.command`
+- `codex-provider-menu.zh-CN.command`
 
 基本检查：
+
+```bash
+python3 codex_provider_switcher.py status
+python3 codex_provider_switcher.py status --lang zh
+```
 
 ```powershell
 .\switch-codex-provider.ps1 status

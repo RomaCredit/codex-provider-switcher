@@ -2,7 +2,7 @@
 
 [中文文档](README.zh-CN.md)
 
-Codex Provider Switcher is a small Windows utility for switching Codex Desktop between the official ChatGPT subscription profile and an OpenAI-compatible third-party API provider.
+Codex Provider Switcher is a small Windows and macOS utility for switching Codex Desktop between the official ChatGPT subscription profile and an OpenAI-compatible third-party API provider.
 
 The default third-party provider is APIMaster:
 
@@ -16,16 +16,28 @@ The tool also synchronizes Codex Desktop conversation history metadata, so proje
 
 English is the default language.
 
-Use Chinese output with:
+Use Chinese output with the cross-platform Python CLI:
+
+```bash
+python3 codex_provider_switcher.py status --lang zh
+```
+
+On Windows PowerShell, the same option is:
 
 ```powershell
 .\switch-codex-provider.ps1 status -Lang zh
 ```
 
-Use the Chinese menu:
+Use the Chinese menu on Windows:
 
 ```bat
 codex-provider-menu.zh-CN.bat
+```
+
+Use the Chinese menu on macOS:
+
+```bash
+./codex-provider-menu.zh-CN.command
 ```
 
 ## Features
@@ -38,22 +50,32 @@ codex-provider-menu.zh-CN.bat
 - Normalize old `\\?\` working-directory path prefixes.
 - Create backups before modifying Codex Desktop state.
 - Support English and Chinese CLI/menu output, with English as default.
+- Support Windows through PowerShell and macOS through the Python CLI.
 
 ## Requirements
 
-- Windows
+- Windows or macOS
 - Codex Desktop
-- PowerShell
-- Python 3 available as `python` in `PATH`
+- Python 3
+- PowerShell, only for the Windows `.ps1` and `.bat` entry points
 
 Python is used to safely update Codex Desktop SQLite state and JSONL session metadata.
 
 ## Quick Start
 
-Fully quit Codex Desktop first, then double-click:
+Fully quit Codex Desktop first.
+
+On Windows, double-click:
 
 ```bat
 codex-provider-menu.bat
+```
+
+On macOS, run:
+
+```bash
+chmod +x ./codex-provider-menu.command
+./codex-provider-menu.command
 ```
 
 Menu options:
@@ -77,6 +99,49 @@ Recommended flow:
 5. Reopen Codex Desktop.
 
 ## CLI Usage
+
+### Cross-Platform Python CLI
+
+Show current status:
+
+```bash
+python3 codex_provider_switcher.py status
+```
+
+Switch to APIMaster:
+
+```bash
+python3 codex_provider_switcher.py apimaster
+```
+
+Switch to APIMaster with explicit key, model, and base URL:
+
+```bash
+python3 codex_provider_switcher.py apimaster \
+  --api-key "YOUR_APIMASTER_KEY" \
+  --model "gpt-5.5" \
+  --base-url "https://apimaster.ai/v1"
+```
+
+Switch back to the official ChatGPT subscription profile:
+
+```bash
+python3 codex_provider_switcher.py official
+```
+
+Repair history without switching provider:
+
+```bash
+python3 codex_provider_switcher.py repair-history
+```
+
+Use a non-default Codex home directory for testing:
+
+```bash
+python3 codex_provider_switcher.py status --codex-home "/tmp/fake-codex-home"
+```
+
+### Windows PowerShell CLI
 
 Show current status:
 
@@ -133,11 +198,21 @@ Use a non-default Codex home directory for testing:
 
 By default, the tool reads and writes:
 
+On Windows:
+
 - `%USERPROFILE%\.codex\config.toml`
 - `%USERPROFILE%\.codex\auth.json`
 - `%USERPROFILE%\.codex\.codex-global-state.json`
 - `%USERPROFILE%\.codex\state_5.sqlite`
 - `%USERPROFILE%\.codex\sessions\...\rollout-*.jsonl`
+
+On macOS:
+
+- `~/.codex/config.toml`
+- `~/.codex/auth.json`
+- `~/.codex/.codex-global-state.json`
+- `~/.codex/state_5.sqlite`
+- `~/.codex/sessions/.../rollout-*.jsonl`
 
 It does not delete conversation content. The history repair only updates metadata used by Codex Desktop to associate threads with projects and providers.
 
@@ -145,8 +220,16 @@ It does not delete conversation content. The history repair only updates metadat
 
 Backups are written to:
 
+Windows:
+
 ```text
 %USERPROFILE%\.codex\provider-switcher
+```
+
+macOS:
+
+```text
+~/.codex/provider-switcher
 ```
 
 Typical backup files:
@@ -190,9 +273,22 @@ To roll back, fully quit Codex Desktop and manually restore the relevant timesta
 
 Do not share real `.codex` files in public issues. They may contain secrets or private workspace paths.
 
+## Platform Notes
+
+The Python CLI is the primary cross-platform implementation and supports Windows and macOS.
+
+The PowerShell script and `.bat` menus are kept for Windows users who prefer a native double-click workflow.
+
+On macOS, Codex Desktop should be fully quit before switching. If the `.command` file does not run after download, use:
+
+```bash
+chmod +x ./codex-provider-menu.command
+chmod +x ./codex-provider-menu.zh-CN.command
+```
+
 ## Limitations
 
-- Windows and Codex Desktop only.
+- Codex Desktop only.
 - Codex Desktop internal state may change between versions. If a future update breaks history display, run `repair-history` first.
 - The official subscription profile must exist locally. Sign in to Codex Desktop first, then run `save-official` or switch from official to APIMaster once.
 
@@ -202,15 +298,23 @@ This project has no build step.
 
 Core files:
 
+- `codex_provider_switcher.py`
 - `switch-codex-provider.ps1`
 - `codex-provider-menu.bat`
 - `codex-provider-menu.zh-CN.bat`
+- `codex-provider-menu.command`
+- `codex-provider-menu.zh-CN.command`
 
 Basic checks:
 
 ```powershell
 .\switch-codex-provider.ps1 status
 .\switch-codex-provider.ps1 status -Lang zh
+```
+
+```bash
+python3 codex_provider_switcher.py status
+python3 codex_provider_switcher.py status --lang zh
 ```
 
 ## License

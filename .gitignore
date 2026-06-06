@@ -13,6 +13,8 @@ Desktop.ini
 *.log
 *.tmp
 *.bak
+__pycache__/
+*.pyc
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
@@ -23,4 +25,3 @@ Desktop.ini
 auth.json
 *.auth.json
 provider-switcher/
-

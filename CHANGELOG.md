@@ -8,3 +8,4 @@
 - Repair project sidebar hints, thread `cwd` paths, SQLite provider values, and session metadata provider values.
 - Add automatic backups before state changes.
 - Add English and Chinese documentation and CLI/menu output, with English as the default.
+- Add cross-platform Python CLI and macOS `.command` menus.
