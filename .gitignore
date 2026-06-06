@@ -1,0 +1,26 @@
+# Local editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Local secrets and state
+.env
+.env.*
+auth.json
+*.auth.json
+provider-switcher/
+
