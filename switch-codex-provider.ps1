@@ -134,7 +134,6 @@ function Repair-StateDbThreadCwds {
     $env:CODEX_SWITCHER_STATE_DB = $StateDbPath
     $env:CODEX_SWITCHER_BACKUP_DIR = $StateDir
     $env:CODEX_SWITCHER_PROVIDER = $DesiredProvider
-    $env:CODEX_SWITCHER_LANG = $Lang
     $script = @'
 import os
 import sqlite3
@@ -143,7 +142,6 @@ import time
 db = os.environ["CODEX_SWITCHER_STATE_DB"]
 backup_dir = os.environ["CODEX_SWITCHER_BACKUP_DIR"]
 desired_provider = os.environ.get("CODEX_SWITCHER_PROVIDER") or "openai"
-lang = os.environ.get("CODEX_SWITCHER_LANG") or "en"
 os.makedirs(backup_dir, exist_ok=True)
 
 stamp = time.strftime("%Y%m%d-%H%M%S")
@@ -171,20 +169,12 @@ provider_updated = cur.execute(
 src.commit()
 src.close()
 
-if lang == "zh":
-    print(
-        "宸蹭慨澶?Codex 鐘舵€佹暟鎹簱锛?
-        f"cwd_checked={len(rows)}锛宑wd_updated={cwd_updated}锛?
-        f"provider={desired_provider}锛宲rovider_updated={provider_updated}锛?
-        f"backup={backup}"
-    )
-else:
-    print(
-        "Repaired Codex state DB: "
-        f"cwd_checked={len(rows)}, cwd_updated={cwd_updated}, "
-        f"provider={desired_provider}, provider_updated={provider_updated}, "
-        f"backup={backup}"
-    )
+print(
+    "Repaired Codex state DB: "
+    f"cwd_checked={len(rows)}, cwd_updated={cwd_updated}, "
+    f"provider={desired_provider}, provider_updated={provider_updated}, "
+    f"backup={backup}"
+)
 '@
     $script | & $python.Source -
 }
@@ -206,7 +196,6 @@ function Repair-SessionMetadata {
     $env:CODEX_SWITCHER_SESSIONS_DIR = $SessionsDir
     $env:CODEX_SWITCHER_BACKUP_DIR = $StateDir
     $env:CODEX_SWITCHER_PROVIDER = $DesiredProvider
-    $env:CODEX_SWITCHER_LANG = $Lang
     $script = @'
 import json
 import os
@@ -217,7 +206,6 @@ from pathlib import Path
 sessions_dir = Path(os.environ["CODEX_SWITCHER_SESSIONS_DIR"])
 backup_root = Path(os.environ["CODEX_SWITCHER_BACKUP_DIR"])
 desired_provider = os.environ.get("CODEX_SWITCHER_PROVIDER") or "openai"
-lang = os.environ.get("CODEX_SWITCHER_LANG") or "en"
 stamp = time.strftime("%Y%m%d-%H%M%S")
 backup_dir = backup_root / f"session-meta.{stamp}.bak"
 
@@ -252,25 +240,17 @@ for path in sessions_dir.rglob("rollout-*.jsonl"):
         backup_path.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(path, backup_path)
 
-        updated_first = json.dumps(meta, ensure_ascii=False, separators=(",", ":"))
+        updated_first = json.dumps(meta, ensure_ascii=True, separators=(",", ":"))
         path.write_text(updated_first + (sep or newline) + rest, encoding="utf-8")
         changed += 1
     except Exception:
         errors += 1
 
-if lang == "zh":
-    backup_label = backup_dir if changed else "鏃犻渶澶囦唤"
-    print(
-        "宸蹭慨澶?Codex 浼氳瘽鍏冩暟鎹細"
-        f"checked={checked}锛宑hanged={changed}锛宲rovider={desired_provider}锛?
-        f"parse_errors={errors}锛宐ackup_dir={backup_label}"
-    )
-else:
-    print(
-        "Repaired Codex session metadata: "
-        f"checked={checked}, changed={changed}, provider={desired_provider}, "
-        f"parse_errors={errors}, backup_dir={backup_dir if changed else 'not-needed'}"
-    )
+print(
+    "Repaired Codex session metadata: "
+    f"checked={checked}, changed={changed}, provider={desired_provider}, "
+    f"parse_errors={errors}, backup_dir={backup_dir if changed else 'not-needed'}"
+)
 '@
     $script | & $python.Source -
 }
