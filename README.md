@@ -1,39 +1,62 @@
 # Codex Provider Switcher
 
-一个 Windows 上的 Codex Desktop provider 一键切换工具。
+[中文文档](README.zh-CN.md)
 
-它可以在官方 ChatGPT 订阅模式和 OpenAI 兼容的第三方 API provider 之间切换，同时同步 Codex Desktop 的历史会话索引，避免切换后项目侧边栏看不到旧对话。
+Codex Provider Switcher is a small Windows utility for switching Codex Desktop between the official ChatGPT subscription profile and an OpenAI-compatible third-party API provider.
 
-> 当前默认第三方 provider 为 APIMaster：`https://apimaster.ai/v1`。
+The default third-party provider is APIMaster:
 
-## 功能
+```text
+https://apimaster.ai/v1
+```
 
-- 一键切换到 APIMaster API key 模式
-- 一键切回官方 ChatGPT 订阅模式
-- 自动保存官方配置和 APIMaster key
-- 自动修复项目侧边栏历史会话
-- 自动同步 `state_5.sqlite` 和 `sessions/rollout-*.jsonl` 里的 `model_provider`
-- 自动修复旧版本留下的 `\\?\` 工作目录路径前缀
-- 每次修改前自动备份关键状态文件
+The tool also synchronizes Codex Desktop conversation history metadata, so project sidebar conversations remain visible after switching provider modes.
 
-## 适用环境
+## Language
+
+English is the default language.
+
+Use Chinese output with:
+
+```powershell
+.\switch-codex-provider.ps1 status -Lang zh
+```
+
+Use the Chinese menu:
+
+```bat
+codex-provider-menu.zh-CN.bat
+```
+
+## Features
+
+- Switch to APIMaster API-key mode.
+- Switch back to the official ChatGPT subscription profile.
+- Save and reuse official and APIMaster auth profiles.
+- Repair Codex Desktop project sidebar conversation history.
+- Synchronize `model_provider` in both `state_5.sqlite` and `sessions/rollout-*.jsonl`.
+- Normalize old `\\?\` working-directory path prefixes.
+- Create backups before modifying Codex Desktop state.
+- Support English and Chinese CLI/menu output, with English as default.
+
+## Requirements
 
 - Windows
 - Codex Desktop
 - PowerShell
-- Python 3，可在 `PATH` 中通过 `python` 调用
+- Python 3 available as `python` in `PATH`
 
-Python 用于安全修改 Codex Desktop 的 SQLite 状态库和 JSONL 会话元数据。
+Python is used to safely update Codex Desktop SQLite state and JSONL session metadata.
 
-## 快速开始
+## Quick Start
 
-下载或 clone 本项目后，双击：
+Fully quit Codex Desktop first, then double-click:
 
 ```bat
 codex-provider-menu.bat
 ```
 
-菜单选项：
+Menu options:
 
 ```text
 1. Switch to APIMaster and sync history
@@ -45,29 +68,29 @@ codex-provider-menu.bat
 0. Exit
 ```
 
-推荐流程：
+Recommended flow:
 
-1. 完全退出 Codex Desktop
-2. 双击 `codex-provider-menu.bat`
-3. 选择要切换的模式
-4. 等脚本完成
-5. 重新打开 Codex Desktop
+1. Fully quit Codex Desktop.
+2. Run `codex-provider-menu.bat`.
+3. Choose the target provider mode.
+4. Wait for the script to finish.
+5. Reopen Codex Desktop.
 
-## 命令行用法
+## CLI Usage
 
-查看当前状态：
+Show current status:
 
 ```powershell
 .\switch-codex-provider.ps1 status
 ```
 
-切换到 APIMaster。如果本机没有保存过 APIMaster key，脚本会提示输入：
+Switch to APIMaster. If no APIMaster key has been saved, the script will prompt for it:
 
 ```powershell
 .\switch-codex-provider.ps1 apimaster
 ```
 
-切换到 APIMaster，并显式传入 key、模型和 base URL：
+Switch to APIMaster with explicit key, model, and base URL:
 
 ```powershell
 .\switch-codex-provider.ps1 apimaster `
@@ -76,39 +99,39 @@ codex-provider-menu.bat
   -BaseUrl "https://apimaster.ai/v1"
 ```
 
-切回官方 ChatGPT 订阅模式：
+Switch back to the official ChatGPT subscription profile:
 
 ```powershell
 .\switch-codex-provider.ps1 official
 ```
 
-只修复历史会话列表，不切换 provider：
+Repair history without switching provider:
 
 ```powershell
 .\switch-codex-provider.ps1 repair-history
 ```
 
-测试 APIMaster `/models` 接口：
+Test APIMaster `/models`:
 
 ```powershell
 .\switch-codex-provider.ps1 test
 ```
 
-保存当前 Codex 配置和认证为“官方订阅配置”：
+Save the current Codex config/auth as the official profile:
 
 ```powershell
 .\switch-codex-provider.ps1 save-official
 ```
 
-指定非默认 Codex home 目录，方便测试或排查：
+Use a non-default Codex home directory for testing:
 
 ```powershell
 .\switch-codex-provider.ps1 status -CodexHome "D:\tmp\fake-codex-home"
 ```
 
-## 它会修改什么
+## What It Modifies
 
-默认会读写：
+By default, the tool reads and writes:
 
 - `%USERPROFILE%\.codex\config.toml`
 - `%USERPROFILE%\.codex\auth.json`
@@ -116,17 +139,17 @@ codex-provider-menu.bat
 - `%USERPROFILE%\.codex\state_5.sqlite`
 - `%USERPROFILE%\.codex\sessions\...\rollout-*.jsonl`
 
-它不会删除对话内容。历史同步只修改会话元数据里的 provider 和工作目录提示，让 Codex Desktop 在切换 provider 后仍能把旧线程归到当前项目下。
+It does not delete conversation content. The history repair only updates metadata used by Codex Desktop to associate threads with projects and providers.
 
-## 备份位置
+## Backups
 
-所有备份都会写入：
+Backups are written to:
 
 ```text
 %USERPROFILE%\.codex\provider-switcher
 ```
 
-常见备份文件：
+Typical backup files:
 
 - `config.<timestamp>.toml.bak`
 - `auth.<timestamp>.json.bak`
@@ -134,60 +157,62 @@ codex-provider-menu.bat
 - `state_5.<timestamp>.sqlite.bak`
 - `session-meta.<timestamp>.bak\...`
 
-## 为什么需要同步历史
+## Why History Sync Is Needed
 
-Codex Desktop 的项目侧边栏历史不是只看会话文件本身。它还会参考：
+Codex Desktop project sidebar history is not based only on the session files. It may also use:
 
-- 全局项目提示：`.codex-global-state.json`
-- SQLite 线程索引：`state_5.sqlite`
-- JSONL 第一行会话元数据：`sessions/rollout-*.jsonl`
+- Global project hints: `.codex-global-state.json`
+- SQLite thread index: `state_5.sqlite`
+- The first-line session metadata in `sessions/rollout-*.jsonl`
 
-其中 `model_provider` 会影响历史列表过滤或重建。只切换 `config.toml` 和 `auth.json` 时，旧会话仍可能停留在 `openai` 或 `custom` provider 下，于是切到 APIMaster 后项目里就看不到旧对话。
+The `model_provider` value can affect sidebar filtering or backfill behavior. If only `config.toml` and `auth.json` are switched, old conversations may remain under `openai` or `custom`, so they can disappear when the current mode is APIMaster.
 
-本工具会把这些元数据同步到当前 provider：
+This tool synchronizes provider metadata to the current mode:
 
-- APIMaster 模式：`apimaster`
-- 官方订阅模式：`openai`
+- APIMaster mode: `apimaster`
+- Official subscription mode: `openai`
 
-## 回滚
+## Rollback
 
-如果需要恢复，可以从 `%USERPROFILE%\.codex\provider-switcher` 找到对应时间戳的备份文件，手动复制回 `.codex` 目录。
+To roll back, fully quit Codex Desktop and manually restore the relevant timestamped backup files from:
 
-建议在 Codex Desktop 完全退出时回滚。
+```text
+%USERPROFILE%\.codex\provider-switcher
+```
 
-## 安全说明
+## Security Notes
 
-- API key 只保存在本机 `%USERPROFILE%\.codex\provider-switcher\apimaster.auth.json`
-- 不会上传任何文件
-- 不会修改 Codex 安装目录
-- 不会删除会话内容
-- 修改 SQLite 和 JSONL 前会先创建备份
+- API keys are stored only on the local machine.
+- The tool does not upload files.
+- The tool does not modify the Codex installation directory.
+- The tool does not delete conversation files.
+- SQLite and JSONL state files are backed up before modification.
 
-## 限制
+Do not share real `.codex` files in public issues. They may contain secrets or private workspace paths.
 
-- 当前只面向 Windows 和 Codex Desktop
-- Codex Desktop 内部状态结构可能随版本变化；如果升级后历史列表异常，请先运行 `repair-history`
-- 官方订阅配置需要先在 Codex Desktop 中登录成功，再运行 `save-official` 或进行一次从官方到 APIMaster 的切换
+## Limitations
 
-## 开发
+- Windows and Codex Desktop only.
+- Codex Desktop internal state may change between versions. If a future update breaks history display, run `repair-history` first.
+- The official subscription profile must exist locally. Sign in to Codex Desktop first, then run `save-official` or switch from official to APIMaster once.
 
-本项目没有构建步骤。核心文件：
+## Development
 
-- `switch-codex-provider.ps1`：切换和历史同步逻辑
-- `codex-provider-menu.bat`：双击菜单入口
+This project has no build step.
 
-基本检查：
+Core files:
+
+- `switch-codex-provider.ps1`
+- `codex-provider-menu.bat`
+- `codex-provider-menu.zh-CN.bat`
+
+Basic checks:
 
 ```powershell
 .\switch-codex-provider.ps1 status
+.\switch-codex-provider.ps1 status -Lang zh
 ```
 
-使用临时目录测试参数解析：
-
-```powershell
-.\switch-codex-provider.ps1 status -CodexHome "D:\tmp\fake-codex-home"
-```
-
-## 许可证
+## License
 
 MIT. See [LICENSE](LICENSE).

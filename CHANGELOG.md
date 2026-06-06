@@ -7,3 +7,4 @@
 - Add Codex Desktop history synchronization across provider modes.
 - Repair project sidebar hints, thread `cwd` paths, SQLite provider values, and session metadata provider values.
 - Add automatic backups before state changes.
+- Add English and Chinese documentation and CLI/menu output, with English as the default.
