@@ -16,10 +16,19 @@ else
   bin_dir="${HOME}/.local/bin"
 fi
 
-mkdir -p "$bin_dir"
-target="$bin_dir/codex-provider-switcher"
-temporary="${target}.tmp.$$"
-trap 'rm -f "$temporary"' EXIT HUP INT TERM
+if [ -n "${CODEX_SWITCHER_DATA_DIR:-}" ]; then
+  data_dir="$CODEX_SWITCHER_DATA_DIR"
+elif [ "$(id -u)" -eq 0 ]; then
+  data_dir="/usr/local/lib/codex-provider-switcher"
+else
+  data_dir="${HOME}/.local/share/codex-provider-switcher"
+fi
+
+mkdir -p "$bin_dir" "$data_dir"
+program="$data_dir/codex_provider_switcher.py"
+launcher="$bin_dir/codex-provider-switcher"
+temporary="${program}.tmp.$$"
+trap 'rm -f "$temporary" "${temporary}.clean"' EXIT HUP INT TERM
 
 if command -v curl >/dev/null 2>&1; then
   curl -fsSL "$SCRIPT_URL" -o "$temporary"
@@ -37,10 +46,16 @@ if [ "$(LC_ALL=C head -c 3 "$temporary")" = "$(printf '\357\273\277')" ]; then
 fi
 
 chmod 755 "$temporary"
-mv "$temporary" "$target"
+mv "$temporary" "$program"
+
+{
+  printf '%s\n' '#!/bin/sh'
+  printf 'exec python3 "%s" "$@"\n' "$program"
+} > "$launcher"
+chmod 755 "$launcher"
 trap - EXIT HUP INT TERM
 
-echo "Installed: $target"
+echo "Installed: $launcher"
 case ":${PATH}:" in
   *":${bin_dir}:"*) echo "Run: codex-provider-switcher" ;;
   *)

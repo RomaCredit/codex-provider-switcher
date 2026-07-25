@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.3
+
+- Install a shell launcher that explicitly invokes Python instead of relying on the downloaded file's shebang.
+- Store the standalone Python program separately under the system or user data directory.
+
 ## 0.2.2
 
 - Remove the UTF-8 BOM that prevented Linux from recognizing the Python shebang.
