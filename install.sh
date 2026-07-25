@@ -30,6 +30,12 @@ else
   exit 1
 fi
 
+# A UTF-8 BOM before #! prevents Unix from recognizing the Python shebang.
+if [ "$(LC_ALL=C head -c 3 "$temporary")" = "$(printf '\357\273\277')" ]; then
+  tail -c +4 "$temporary" > "${temporary}.clean"
+  mv "${temporary}.clean" "$temporary"
+fi
+
 chmod 755 "$temporary"
 mv "$temporary" "$target"
 trap - EXIT HUP INT TERM

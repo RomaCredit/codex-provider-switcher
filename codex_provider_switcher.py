@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Cross-platform Codex Desktop provider switcher.
 
 This CLI supports macOS and Windows. The Windows PowerShell script remains
@@ -22,7 +22,7 @@ from typing import Any
 
 DEFAULT_BASE_URL = "https://apimaster.ai/v1"
 DEFAULT_MODEL = "gpt-5.5"
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 
 MESSAGES = {
     "state_db_missing": "Codex state DB not found: {0}",

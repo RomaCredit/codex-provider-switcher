@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2
+
+- Remove the UTF-8 BOM that prevented Linux from recognizing the Python shebang.
+- Make the standalone installer strip a BOM defensively before installing.
+
 ## 0.2.1
 
 - Make the macOS/Linux one-line installer work without pip or pipx.
