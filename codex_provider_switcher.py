@@ -22,7 +22,7 @@ from typing import Any
 
 DEFAULT_BASE_URL = "https://apimaster.ai/v1"
 DEFAULT_MODEL = "gpt-5.5"
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 
 MESSAGES = {
     "state_db_missing": "Codex state DB not found: {0}",

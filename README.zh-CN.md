@@ -52,7 +52,7 @@ Python 用于安全修改 Codex Desktop 的 SQLite 状态库和 JSONL 会话元�
 推荐的 macOS/Linux 安装方式只需要 Python 3 和 curl 或 wget，不需要 pip：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/RomaCredit/codex-provider-switcher/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/RomaCredit/codex-provider-switcher/v0.2.4/install.sh | sh
 ```
 
 root 用户会安装到 `/usr/local/bin`，普通用户会安装到 `~/.local/bin`。

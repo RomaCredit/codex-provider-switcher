@@ -1,7 +1,8 @@
 #!/bin/sh
 set -eu
 
-SCRIPT_URL="https://raw.githubusercontent.com/RomaCredit/codex-provider-switcher/main/codex_provider_switcher.py"
+VERSION="v0.2.4"
+SCRIPT_URL="https://raw.githubusercontent.com/RomaCredit/codex-provider-switcher/${VERSION}/codex_provider_switcher.py"
 
 if ! command -v python3 >/dev/null 2>&1; then
   echo "Python 3 is required." >&2

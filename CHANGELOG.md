@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.4
+
+- Pin standalone installation downloads to a version tag instead of the cache-prone `main` branch.
+- Document a versioned one-line installer URL for reproducible installation.
+
 ## 0.2.3
 
 - Install a shell launcher that explicitly invokes Python instead of relying on the downloaded file's shebang.

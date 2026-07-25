@@ -52,7 +52,7 @@ Fully quit Codex Desktop first.
 The recommended macOS/Linux installer only requires Python 3 and either curl or wget. It does not require pip:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/RomaCredit/codex-provider-switcher/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/RomaCredit/codex-provider-switcher/v0.2.4/install.sh | sh
 ```
 
 Root users install to `/usr/local/bin`. Regular users install to `~/.local/bin`.
