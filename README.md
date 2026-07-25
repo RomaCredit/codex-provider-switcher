@@ -47,6 +47,49 @@ Python is used to safely update Codex Desktop SQLite state and JSONL session met
 
 Fully quit Codex Desktop first.
 
+### Install the global command
+
+The recommended installation method is [pipx](https://pipx.pypa.io/):
+
+```bash
+pipx install git+https://github.com/RomaCredit/codex-provider-switcher.git
+```
+
+Launch the interactive menu from any directory:
+
+```bash
+codex-provider-switcher
+```
+
+Or run a command directly:
+
+```bash
+codex-provider-switcher status
+codex-provider-switcher apimaster
+codex-provider-switcher official
+```
+
+One-line installer for macOS/Linux:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/RomaCredit/codex-provider-switcher/main/install.sh | sh
+```
+
+One-line installer for Windows PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/RomaCredit/codex-provider-switcher/main/install.ps1 | iex
+```
+
+Upgrade or uninstall with pipx:
+
+```bash
+pipx upgrade codex-provider-switcher
+pipx uninstall codex-provider-switcher
+```
+
+### Run directly from a cloned repository
+
 On Windows, double-click:
 
 ```bat
@@ -275,7 +318,7 @@ chmod +x ./codex-provider-menu.command
 
 ## Development
 
-This project has no build step.
+This project uses standard Python packaging and has no custom build step.
 
 Core files:
 
@@ -291,7 +334,9 @@ Basic checks:
 ```
 
 ```bash
-python3 codex_provider_switcher.py status
+python3 -m unittest discover -s tests -v
+python3 -m pip install .
+codex-provider-switcher --version
 ```
 
 ## License

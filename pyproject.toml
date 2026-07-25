@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "codex-provider-switcher"
+version = "0.2.0"
+description = "Switch Codex Desktop between official subscription and OpenAI-compatible providers."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "RomaCredit" }]
+keywords = ["codex", "openai", "provider", "cli"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: MacOS",
+  "Operating System :: Microsoft :: Windows",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+
+[project.urls]
+Homepage = "https://github.com/RomaCredit/codex-provider-switcher"
+Repository = "https://github.com/RomaCredit/codex-provider-switcher"
+Issues = "https://github.com/RomaCredit/codex-provider-switcher/issues"
+
+[project.scripts]
+codex-provider-switcher = "codex_provider_switcher:main"
+
+[tool.setuptools]
+py-modules = ["codex_provider_switcher"]

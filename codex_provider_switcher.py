@@ -22,6 +22,7 @@ from typing import Any
 
 DEFAULT_BASE_URL = "https://apimaster.ai/v1"
 DEFAULT_MODEL = "gpt-5.5"
+__version__ = "0.2.0"
 
 MESSAGES = {
     "state_db_missing": "Codex state DB not found: {0}",
@@ -44,6 +45,7 @@ MESSAGES = {
     "no_apimaster_key": "No APIMaster API key found. Run: python3 codex_provider_switcher.py apimaster --api-key YOUR_KEY",
     "models_ok": "APIMaster /models OK. First models:",
     "saved_official": "Saved current Codex config/auth as official profile.",
+    "invalid_choice": "Invalid choice. Please try again.",
 }
 def tr(key: str, *args: Any) -> str:
     template = MESSAGES.get(key) or key
@@ -401,26 +403,26 @@ class Switcher:
             print(f" - {model_id}")
 
 
-def parse_args() -> argparse.Namespace:
+MODES = ["apimaster", "official", "status", "test", "save-official", "repair-history"]
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Switch Codex Desktop provider profiles.")
     parser.add_argument(
         "mode",
         nargs="?",
-        default="status",
-        choices=["apimaster", "official", "status", "test", "save-official", "repair-history"],
+        choices=MODES,
     )
     parser.add_argument("--api-key")
     parser.add_argument("--model", default=DEFAULT_MODEL)
     parser.add_argument("--base-url", default=DEFAULT_BASE_URL)
     parser.add_argument("--codex-home", default=os.path.expanduser("~/.codex"))
     parser.add_argument("--chat-fallback", action="store_true")
-    return parser.parse_args()
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    return parser.parse_args(argv)
 
 
-def main() -> None:
-    args = parse_args()
-    switcher = Switcher(Path(args.codex_home))
-    switcher.ensure_state_dir()
+def run_mode(args: argparse.Namespace, switcher: Switcher) -> None:
     if args.mode == "apimaster":
         switcher.switch_to_apimaster(
             args.api_key, args.model, args.base_url, args.chat_fallback
@@ -436,6 +438,58 @@ def main() -> None:
         switcher.repair_desktop_history_hints()
     else:
         switcher.status()
+
+
+def interactive_menu(args: argparse.Namespace, switcher: Switcher) -> None:
+    choices = {
+        "1": "apimaster",
+        "2": "official",
+        "3": "status",
+        "4": "test",
+        "5": "save-official",
+        "6": "repair-history",
+    }
+    while True:
+        print(
+            "\nCodex Provider Switcher\n"
+            "1. Switch to APIMaster and sync history\n"
+            "2. Switch to official subscription and sync history\n"
+            "3. Show status\n"
+            "4. Test APIMaster /v1/models\n"
+            "5. Save current profile as official\n"
+            "6. Repair Desktop history list\n"
+            "0. Exit\n"
+        )
+        try:
+            choice = input("Choose: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            return
+        if choice == "0":
+            return
+        mode = choices.get(choice)
+        if not mode:
+            switcher.warn("invalid_choice")
+            continue
+        args.mode = mode
+        try:
+            run_mode(args, switcher)
+        except Exception as exc:
+            print(f"ERROR: {exc}", file=sys.stderr)
+
+
+def main() -> None:
+    args = parse_args()
+    switcher = Switcher(Path(args.codex_home))
+    switcher.ensure_state_dir()
+    if args.mode is None:
+        if sys.stdin.isatty():
+            interactive_menu(args, switcher)
+        else:
+            args.mode = "status"
+            run_mode(args, switcher)
+    else:
+        run_mode(args, switcher)
 
 
 if __name__ == "__main__":

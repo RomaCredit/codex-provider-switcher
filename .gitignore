@@ -18,6 +18,10 @@ __pycache__/
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+build/
+dist/
+*.egg-info/
+.venv/
 
 # Local secrets and state
 .env

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.0
+
+- Add Python package metadata and the global `codex-provider-switcher` command.
+- Open an interactive menu when the installed command is run without arguments.
+- Add `pipx`, `pip`, curl, and PowerShell installation paths.
+- Add cross-platform GitHub Actions tests.
+
 ## 0.1.0
 
 - Add APIMaster and official subscription switching.
