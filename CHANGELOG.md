@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1
+
+- Make the macOS/Linux one-line installer work without pip or pipx.
+- Install the standalone command into `/usr/local/bin` for root or `~/.local/bin` for regular users.
+
 ## 0.2.0
 
 - Add Python package metadata and the global `codex-provider-switcher` command.

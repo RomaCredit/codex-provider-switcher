@@ -49,11 +49,13 @@ Python 用于安全修改 Codex Desktop 的 SQLite 状态库和 JSONL 会话元�
 
 ### 安装全局命令
 
-推荐使用 [pipx](https://pipx.pypa.io/)：
+推荐的 macOS/Linux 安装方式只需要 Python 3 和 curl 或 wget，不需要 pip：
 
 ```bash
-pipx install git+https://github.com/RomaCredit/codex-provider-switcher.git
+curl -fsSL https://raw.githubusercontent.com/RomaCredit/codex-provider-switcher/main/install.sh | sh
 ```
+
+root 用户会安装到 `/usr/local/bin`，普通用户会安装到 `~/.local/bin`。
 
 安装后可以在任意目录启动交互菜单：
 
@@ -69,10 +71,10 @@ codex-provider-switcher apimaster
 codex-provider-switcher official
 ```
 
-macOS/Linux 一键安装：
+Python 用户也可以选择使用 [pipx](https://pipx.pypa.io/)：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/RomaCredit/codex-provider-switcher/main/install.sh | sh
+pipx install git+https://github.com/RomaCredit/codex-provider-switcher.git
 ```
 
 Windows PowerShell 一键安装：
@@ -81,7 +83,7 @@ Windows PowerShell 一键安装：
 irm https://raw.githubusercontent.com/RomaCredit/codex-provider-switcher/main/install.ps1 | iex
 ```
 
-使用 pipx 升级或卸载：
+升级或卸载 pipx 安装：
 
 ```bash
 pipx upgrade codex-provider-switcher

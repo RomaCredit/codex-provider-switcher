@@ -49,11 +49,13 @@ Fully quit Codex Desktop first.
 
 ### Install the global command
 
-The recommended installation method is [pipx](https://pipx.pypa.io/):
+The recommended macOS/Linux installer only requires Python 3 and either curl or wget. It does not require pip:
 
 ```bash
-pipx install git+https://github.com/RomaCredit/codex-provider-switcher.git
+curl -fsSL https://raw.githubusercontent.com/RomaCredit/codex-provider-switcher/main/install.sh | sh
 ```
+
+Root users install to `/usr/local/bin`. Regular users install to `~/.local/bin`.
 
 Launch the interactive menu from any directory:
 
@@ -69,10 +71,10 @@ codex-provider-switcher apimaster
 codex-provider-switcher official
 ```
 
-One-line installer for macOS/Linux:
+Python users can alternatively install with [pipx](https://pipx.pypa.io/):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/RomaCredit/codex-provider-switcher/main/install.sh | sh
+pipx install git+https://github.com/RomaCredit/codex-provider-switcher.git
 ```
 
 One-line installer for Windows PowerShell:
@@ -81,7 +83,7 @@ One-line installer for Windows PowerShell:
 irm https://raw.githubusercontent.com/RomaCredit/codex-provider-switcher/main/install.ps1 | iex
 ```
 
-Upgrade or uninstall with pipx:
+Upgrade or uninstall a pipx installation:
 
 ```bash
 pipx upgrade codex-provider-switcher
